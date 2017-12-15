@@ -1,0 +1,60 @@
+version: '2'
+services:
+  mysql:
+    build: 
+      context: ../../
+      dockerfile: make/dev/container/db/Dockerfile
+    restart: always
+    volumes:
+      - /data/board/database:/var/lib/mysql
+    env_file:
+      - ../config/db/env
+  #  networks:
+  #    - board
+    ports:
+      - 3306:3306
+  #  depends_on:
+  #    - log
+  #  logging:
+  #    driver: "syslog"
+  #    options:  
+  #      syslog-address: "tcp://127.0.0.1:1514"
+  #      tag: "mysql"
+  gitserver:
+    build:
+      context: ../../
+      dockerfile: make/dev/container/gitserver/Dockerfile
+    restart: always
+    volumes:
+      - /data/board/gitserver/repos:/gitserver/repos
+      - ../config/ssh_keys:/gitserver/keys
+   # networks:
+   #   - board
+   # links:
+   #   - jenkins
+  #  depends_on:
+  #    - log
+  #  logging:
+  #    driver: "syslog"
+  #    options:
+   #     syslog-address: "tcp://127.0.0.1:1514"
+   #     tag: "gitserver"
+  apiserver:
+    build:
+      context: ../../
+      dockerfile: make/dev/container/apiserver/Dockerfile
+    restart: always
+    volumes:
+      - ../config/apiserver/app.conf:/go/bin/app.conf:z
+      - ../../tools/swagger/vendors/swagger-ui-2.1.4/dist:/go/bin/swagger:z
+      - ../config/ssh_keys:/root/.ssh
+      - /data/board/gitserver/repos:/repos
+    env_file:
+      - ../config/apiserver/env
+  #  networks:
+   #   - board
+    links:
+      - mysql
+      - gitserver
+    ports: 
+      - 8088:8088
