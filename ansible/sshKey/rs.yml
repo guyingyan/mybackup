@@ -1,0 +1,8 @@
+- hosts: ts
+  remote_user: root
+
+  tasks:
+  - name: copy ssh key
+    authorized_key:
+      user: root
+      key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
