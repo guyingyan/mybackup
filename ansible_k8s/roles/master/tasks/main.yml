@@ -1,0 +1,20 @@
+---
+- name: install kubernetes master
+  yum: name=kubernetes-master state=latest
+- name: config
+  template: src=h.js dest=/etc/kubernetes/config
+- name: apiserver
+  template: src=apiserver dest=/etc/kubernetes/apiserver
+- name: Enable kube-scheduler 
+  service: name=kube-scheduler enabled=yes state=started
+- name: Enable kube-controller-manager
+  service: name=kube-controller-manager enabled=yes state=started
+
+- name: Enable kube-apiserver
+  service: name=kube-apiserver enabled=yes
+
+- name: Start kube-apiserver
+  service: name=kube-apiserver state=started
+  register: started_kube-apiserver
+
+  

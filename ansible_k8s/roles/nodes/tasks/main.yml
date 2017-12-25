@@ -1,0 +1,24 @@
+---
+- name: install kubernetes node
+  yum: name=kubernetes-node state=latest
+
+- name: config
+  template: src=config dest=/etc/kubernetes/config
+
+- name: kubelet
+  template: src=kubelet dest=/etc/kubernetes/apiserver
+
+- name: Enable kubelet
+  service: name=kubelet enabled=yes state=started
+
+- name: Enable kube-proxy
+  service: name=kube-proxy enabled=yes state=started
+
+#- name: Enable kube-apiserver
+#  service: name=kube-apiserver enabled=yes
+
+#- name: Start kube-apiserver
+#  service: name=kube-apiserver state=started
+#  register: started_kube-apiserver
+
+  
