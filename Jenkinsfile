@@ -1,6 +1,6 @@
 pipeline{
-stages{
-agent any
+	stages{
+		agent any
 stage('build'){
 steps{
 echo 'test'
