@@ -1,20 +1,8 @@
 ---
-- name: install flannel
-  yum: name=flannel state=latest
+- name: copy init file
+  copy: src={{role_path}}/files/init.sh dest=/var/lib/yaml/init.sh mode=755
 
-#- name: config
-#  template: src=config dest=/etc/kubernetes/config
-
-
-- name: Enable flannel
-  service: name=flannel enabled=yes state=started
-
-
-#- name: Enable kube-apiserver
-#  service: name=kube-apiserver enabled=yes
-
-#- name: Start kube-apiserver
-#  service: name=kube-apiserver state=started
-#  register: started_kube-apiserver
+- name: run init.sh
+  shell: /var/lib/yaml/init.sh http://{{master_ip_address}}:8080
 
   

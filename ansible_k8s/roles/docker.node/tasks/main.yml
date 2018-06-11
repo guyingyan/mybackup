@@ -1,0 +1,16 @@
+---
+- name: install docker-ce
+  yum: name=docker-ce state=latest
+
+- name: modify docker config file
+  shell: sed -i '/ExecStart/s/$/ --iptables=false/' /usr/lib/systemd/system/docker.service
+
+- name: mkdir /etc/docker
+  shell: mkdir -p /etc/docker
+
+- name: config daemon.json file
+  copy: src={{role_path}}/files/daemon.json dest=/etc/docker/daemon.json
+
+- name: restart docker
+  service: name=docker enabled=yes state=restarted
+

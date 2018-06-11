@@ -1,0 +1,4 @@
+---
+- name: copy generage snap file
+  template: src={{role_path}}/templates/flannel.yml dest=/root/flannel.yml
+

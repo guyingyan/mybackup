@@ -1,0 +1,13 @@
+- hosts: nodes
+  remote_user: root
+  tasks:
+    - debug: var={{ ansible_default_ipv4['address'] }}
+    - command: /bin/false
+      register: result
+      ignore_errors: True
+    - command: /bin/something
+      when: result|failed
+    - command: /bin/something_else
+      when: result|succeeded
+    - command: /bin/still/something_else
+      when: result|skipped

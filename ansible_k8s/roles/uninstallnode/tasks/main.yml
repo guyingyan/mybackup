@@ -1,0 +1,43 @@
+---
+- name: systemctl stop k8s-loadimages
+  shell: systemctl stop k8s-loadimages
+  ignore_errors: yes
+- name: systemctl stop kubelet
+  shell: systemctl stop kubelet
+  ignore_errors: yes
+
+- name: delete k8s-loadimages.service
+  shell: rm -rf /usr/lib/systemd/system/k8s-loadimages.service
+- name: delete kubelet.service
+  shell: rm -rf /usr/lib/systemd/system/kubelet.service
+
+- name: systemctl daemon-reload
+  shell: systemctl daemon-reload
+  ignore_errors: yes
+
+- name: delete /etc/kubernetes/{manifests,certs}
+  shell: rm -rf /etc/kubernetes/{manifests,certs}
+  ignore_errors: yes
+- name: delete /var/lib/k8s/images
+  shell: rm -rf  /var/lib/k8s/images
+- name: delete /var/lib/yaml
+  shell: rm -rf /var/lib/yaml
+- name: delete /opt/cni/bin
+  shell: rm -rf /opt/cni/bin
+- name: delete /var/lib/kubelet
+  shell: rm -rf /var/lib/kubelet
+- name: delete /var/lib/k8sconfig
+  shell: rm -rf /var/lib/k8sconfig
+  ignore_errors: yes
+- name: delete all container
+  shell: docker rm -f $(docker ps|awk '{print $1}')
+  ignore_errors: yes
+- name: delete all images
+  shell: docker rmi -f $(docker images|awk '{print $3}')
+  ignore_errors: yes
+- name: delete flannel
+  shell: ip link delete flannel.1
+  ignore_errors: yes
+- name: delete cni
+  shell: ip link delete cni0
+  ignore_errors: yes
